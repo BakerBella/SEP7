@@ -1,0 +1,48 @@
+{
+  "Users": [
+    {
+      "Id": 1,
+      "UserName": "BakerBella",
+      "SecurityLevel": 0
+    },
+    {
+      "Id": 2,
+      "UserName": "BakerBella123",
+      "SecurityLevel": 1
+    },
+    {
+      "Id": 3,
+      "UserName": "Casper",
+      "SecurityLevel": 1
+    },
+    {
+      "Id": 4,
+      "UserName": "BakerBella1",
+      "SecurityLevel": 1
+    }
+  ],
+  "Posts": [
+    {
+      "Id": 1,
+      "Owner": null,
+      "Title": "DNP",
+      "Body": "Is a really difficult class to take"
+    },
+    {
+      "Id": 2,
+      "Owner": null,
+      "Title": "DNP",
+      "Body": "Is a really difficult class to take"
+    },
+    {
+      "Id": 3,
+      "Owner": {
+        "Id": 1,
+        "UserName": "BakerBella",
+        "SecurityLevel": 0
+      },
+      "Title": "DNP",
+      "Body": "Is a really really really difficult class"
+    }
+  ]
+}
