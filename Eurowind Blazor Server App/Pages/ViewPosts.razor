@@ -1,0 +1,65 @@
+@page "/ViewPosts"
+@using Eurowind_Domain.Models
+@using Eurowind_HttpClients.ClientInterfaces
+@inject IPostService PostService
+@inject NavigationManager navMgr
+
+<h3>Posts Overview</h3>
+
+<div>
+    <button @onclick="LoadPosts">Load</button>
+</div>
+
+@if (posts == null)
+{
+}
+else if (!posts.Any())
+{
+    <p>No Posts To Display</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Title</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in posts)
+        {
+            <tr>
+                <td><a @onclick="() => GoToOverview(item.Id)">@item.Title</a></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@if (!string.IsNullOrEmpty(msg))
+{
+    <label style="color: red">@msg</label>
+}
+
+@code {
+    private ICollection<Post> posts;
+    private string msg = "";
+
+    private async Task LoadPosts()
+    {
+        try
+        {
+            posts = await PostService.GetAsync(null, null, null, null);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            msg = e.Message;
+        }
+    }
+
+    private void GoToOverview(int id)
+    {
+        navMgr.NavigateTo($"/PostDetails/{id}");
+    }
+}

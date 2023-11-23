@@ -1,0 +1,102 @@
+@page "/CreatePost"
+@using Eurowind_Domain.DTOs
+@using Eurowind_Domain.Models
+@using Eurowind_HttpClients.ClientInterfaces
+@inject IUserService userService
+@inject IPostService postService
+@inject NavigationManager navMgr
+@inject AuthenticationStateProvider authenticationStateProvider
+
+<div class="card">
+    @if (users == null)
+    {
+        <label>Loading users...</label>
+    }
+    else if (!users.Any())
+    {
+        <label>No users, you cannot create a Post without assignee.</label>
+    }
+    else
+    {
+        <h3>Create Post</h3>
+        <div class="form-group field">
+            <label>Title:</label>
+            <input type="text" @bind="postTitle"/>
+        </div>
+        <div class="form-group field">
+            <label>Body:</label>
+            <textarea @bind="postBody" rows="4"></textarea>
+        </div>
+        <div class="form-group field">
+            <label>Assignee:</label>
+            <select @bind="selectedUserId">
+                <option>Choose</option>
+                @foreach (User user in users)
+                {
+                    <option value="@user.Id">@user.UserName</option>
+                }
+            </select>
+        </div>
+        <div class="button-row">
+            @if (!string.IsNullOrEmpty(msg))
+            {
+                <label style="color: red">@msg</label>
+            }
+            <button @onclick="Create" class="acceptbtn">Create</button>
+        </div>
+    }
+</div>
+
+@code {
+    private IEnumerable<User>? users;
+    private int? selectedUserId;
+    private string postTitle = "";
+    private string postBody = "";
+
+    private string msg = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        msg = "";
+        try
+        {
+            users = await userService.GetUsers();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    private async Task Create()
+    {
+        msg = "";
+        if (selectedUserId == null)
+        {
+            msg = "You must select an author!";
+            return;
+        }
+        if (string.IsNullOrEmpty(postTitle))
+        {
+            msg = "Title cannot be empty!";
+            return;
+        }
+        if (string.IsNullOrEmpty(postBody))
+        {
+            msg = "Body cannot be empty!";
+        }
+
+        try
+        {
+            PostCreationDto dto = new((int)selectedUserId, postTitle, postBody);
+            await postService.CreateAsync(dto);
+            navMgr.NavigateTo("/");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            msg = e.Message;
+        }
+    }
+}

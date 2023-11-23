@@ -1,0 +1,33 @@
+@page "/PostDetails/{Id:int}"
+@using Eurowind_HttpClients.ClientInterfaces
+@using Eurowind_Domain.DTOs
+@inject IPostService PostService
+@inject NavigationManager NavigationManager
+
+<h3>Post Details</h3>
+
+@if (post == null)
+{
+    <p>Loading Post...</p>
+}
+else
+{
+    <div>
+        <p>Post ID: @post.Id</p>
+        <p>Owner: @post.OwnerName</p>
+        <p>Title: @post.Title</p>
+        <p>Body: @post.Body</p>
+    </div>
+}
+
+@code {
+    private PostBasicDto post;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        post = await PostService.GetByIdAsync(Id);
+    }
+}

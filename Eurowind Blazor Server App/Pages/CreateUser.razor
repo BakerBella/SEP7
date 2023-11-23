@@ -1,0 +1,71 @@
+@page "/CreateUser"
+@using Eurowind_Domain.DTOs
+@using Eurowind_HttpClients.ClientInterfaces
+@inject IUserService UserService;
+
+<div class="card">
+    <h3>Create User</h3>
+    <div class="form-group field">
+        <label>User name:</label>
+        <input type="text" @bind="username" @bind:event="oninput"/>
+        @if (!string.IsNullOrEmpty(resultMsg))
+        {
+            <label style="color: @color">@resultMsg</label>
+        }
+    </div>
+    <div class="form-group field">
+        <label>Password:</label>
+        <input type="text" @bind="password" @bind:event="oninput"/>
+        @if (!string.IsNullOrEmpty(resultMsg))
+        {
+            <label style="color: @color">@resultMsg</label>
+        }
+    </div>
+    <div class="form-group field">
+        <label>Security Level:</label>
+        <select @bind="securityLevel">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+        </select>
+    </div>
+    <div class="button-row">
+        <button @onclick="Create" disabled="@(string.IsNullOrEmpty(username))" class="acceptbtn">Create</button>
+    </div>
+</div>
+
+@code {
+    private string username = "";
+    private string password = "";
+    private int securityLevel = -1;
+    private string resultMsg = "";
+    private string color = "";
+    
+    private async Task Create()
+    {
+        resultMsg = "";
+
+        try
+        {
+            if (securityLevel != -1)
+            {
+                await UserService.Create(new UserCreationDto(username, password, securityLevel));
+                username = "";
+                password = "";
+                resultMsg = "User successfully created";
+                color = "green";
+            }
+            else
+            {
+                resultMsg = "Please select a valid security level";
+                color = "red";
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            resultMsg = e.Message;
+            color = "red";
+        }
+    }
+}
