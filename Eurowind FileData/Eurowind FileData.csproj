@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <RootNamespace>Eurowind_FileData</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Eurowind Application\Eurowind Application.csproj" />
+      <ProjectReference Include="..\Eurowind Domain\Eurowind Domain.csproj" />
+    </ItemGroup>
+
+</Project>
